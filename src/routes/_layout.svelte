@@ -1,15 +1,20 @@
 <script>
 	import Nav from '../components/Nav.svelte';
-
-	export let segment;
 </script>
 
 <style>
+    @media only screen and (min-width: 460px) {
+        main {
+            max-width: 55em;
+            margin: 0 auto;
+        }
+    }
 	main {
 		position: relative;
-		max-width: 56em;
-		padding: 2em;
-		margin: 0 auto;
+        margin: 1.5em;
+        overflow-x: hidden;
+        padding-top: 1em;
+        padding-bottom:1em;
 		box-sizing: border-box;
 	}
 </style>

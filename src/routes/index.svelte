@@ -69,7 +69,7 @@ function initTrainer() {
 
   tuner.onFrequencyRaw = onFrequencyRaw
 
-  swal.fire('Click OK to continue').then(function() {
+  swal.fire('Welcome to Transpeak', 'Transpeak helps you train your voice to be lower than higher than a specified pitch using your microphone. Click OK so we can request permission to access your microphone. Sound from your microphone is not transmitted to any remote servers').then(function() {
     tuner.init()
     frequencyData = new Uint8Array(tuner.analyser.frequencyBinCount)
   })
@@ -174,6 +174,11 @@ const guessThreshold = (e) => {
   e.preventDefault()
   ampThreshold = parseInt(movingAmpAvg) + autoAmpThresholdOffset
 }
+const reset = () => {
+    freqThreshold = defaultFreqThreshold
+    timeThreshold = defaultTimeThreshold
+    ampcThreshold = defaultAmpThreshold
+}
 
 $: isAmpOverThreshold = avgAmp > Math.max(movingAmpAvg, ampThreshold)
 </script>
@@ -185,10 +190,29 @@ $: isAmpOverThreshold = avgAmp > Math.max(movingAmpAvg, ampThreshold)
   bottom: 0;
   z-index: -1;
 }
+.controlGroupLabel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+.controlGroupLabel input[inputmode="numeric"] {
+    margin-left: 2em;
+    width: 50px;
+}
+.controlGroupLabel .inputSuffix {
+    margin-left: 2em;
+    height: 5ex;
+}
+
+.btclink {
+  font-size: 10pt;
+}
 </style>
 <em>Transpeak</em><br/>
 <p>Train your voice to stay above or below a target frequency in real-time</p>
 <canvas class="frequency-bars"></canvas>
+<b>Current detected readings</b>
 <table>
   <tr>
     <th>Frequency</th><th>Volume</th>
@@ -210,29 +234,55 @@ $: isAmpOverThreshold = avgAmp > Math.max(movingAmpAvg, ampThreshold)
       <option value="lower">Lower</option>
       <option value="higher">Higher</option>
     </select>
-    <label for="thresholdFrequency">Frequency ({freqThreshold} hz)</label>
-    <input bind:value={freqThreshold} type="range" step="10" name="thresholdFrequency" min="70" max="200"/>
+    <label for="thresholdFrequency">Frequency</label>
+    <div class="controlGroupLabel">
+        <input bind:value={freqThreshold} type="range" step="10" name="thresholdFrequency" min="70" max="200"/>
+        <input inputmode="numeric" bind:value={freqThreshold} pattern="\d*" />
+        <div class="inputSuffix">
+            hz
+        </div>
+    </div>
     <p>
     This is the frequency where we will sound the alarm and play the reference tone if the detected pitch is {trainingMode}
     </p>
     <label for="ampThreshold">Amp speaking volume threshold ({ampThreshold} db)</label>
-    <input bind:value={ampThreshold} name="ampThreshold" type="range" step="5" min="-150" max="-50"/>
+    <div class="controlGroupLabel">
+        <input bind:value={ampThreshold} name="ampThreshold" type="range" step="5" min="-150" max="-50"/>
+        <input inputmode="numeric" bind:value={ampThreshold} pattern="\d*" />
+        <div class="inputSuffix">
+        db
+        </div>
+    </div>
     <p>
       Do not count frequencies whose volume is lower than this number. Make this number higher to decrease sensitivity.
-      <a href="#" on:click={guessThreshold}>Guess threshold</a>
+      <button class="button button-outline" on:click={guessThreshold}>Guess Threshold</button>
     </p>
-    <label name="timeThreshold">Time delay threshold: ({timeThreshold} ms)</label>
-    <input bind:value={timeThreshold} name="timeThreshold" type="range" step="100" min="100" max="2000"/>
+        <label name="timeThreshold">Time delay threshold: ({timeThreshold} ms)</label>
+    <div class="controlGroupLabel">
+        <input bind:value={timeThreshold} name="timeThreshold" type="range" step="100" min="100" max="2000"/>
+        <input inputmode="numeric" bind:value={timeThreshold} pattern="\d*" />
+        <div class="inputSuffix">
+            ms
+            </div>
+    </div>
     <p>
     When an out-of-range pitch is detected, this is how long we should continuously detect this pitch before triggering the alarm. Raise this to decrease sensitivity.
     </p>
   </fieldset>
 </form>
+<button type="button button-outline" on:click={reset}>Reset to defaults</button>
 <pre id="output">
 lastDetectedCross: {lastDetectedCross}
 ampHistory: {ampHistory.join(',')}
 </pre>
-Made with 💖 by <a href="http://twitter.com/tastycode">@tastycode</a>. To support this project, please send BTC to <a href="bitcoin:bc1qnm44qzsnwyrl3uynywv4n58jy2tmtkd5wpjwp0">bc1qnm44qzsnwyrl3uynywv4n58jy2tmtkd5wpjwp0</a>. Or venmo/cashapp @tastycode<br/>
+Made with 💖 by <a href="http://twitter.com/tastycode">@tastycode</a>.
+<p>
+To support this project, please send BTC to <br/>
+<a class="btclink" href="bitcoin:bc1qnm44qzsnwyrl3uynywv4n58jy2tmtkd5wpjwp0">bc1qnm44qzsnwyrl3uynywv4n58jy2tmtkd5wpjwp0</a>
+<br/>@tastycode on venmo/cashapp<br/>
+</p>
+
+
 Shortlink: <a href="//bit.ly/transpeak">bit.ly/transpeak</a>
 
 
