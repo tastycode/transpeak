@@ -1172,6 +1172,11 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
+frappe-charts@^1.5.3:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/frappe-charts/-/frappe-charts-1.5.6.tgz#6fab528aaba659c1c171e6ea267a791b915f0ef0"
+  integrity sha512-1OWqF7ijDba+Nlei/CjXSORYlUm+/M0oeVOP3Yu7R2bLBDc5GYkFSHGVx13XavuCxDoOPEJZMRgRK6GUAuB8FQ==
+
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -1726,10 +1731,23 @@ supports-color@^7.0.0:
   dependencies:
     has-flag "^4.0.0"
 
+svelte-frappe-charts@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/svelte-frappe-charts/-/svelte-frappe-charts-1.3.1.tgz#444e9a69a857a229bfd63ddc4028988b5cf4fd2e"
+  integrity sha512-K3Xnk+hNhOPjNm8shKXyWQmN0DaGOGyDZUBEE4mAO364f2fJtSKK5G0ZxFGNHz38Hxuy2s494c4zhePDhoeAnQ==
+  dependencies:
+    frappe-charts "^1.5.3"
+    svelte "^3.29.7"
+
 svelte@^3.17.3:
   version "3.25.1"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.25.1.tgz#218def1243fea5a97af6eb60f5e232315bb57ac4"
   integrity sha512-IbrVKTmuR0BvDw4ii8/gBNy8REu7nWTRy9uhUz+Yuae5lIjWgSGwKlWtJGC2Vg95s+UnXPqDu0Kk/sUwe0t2GQ==
+
+svelte@^3.29.7:
+  version "3.31.2"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.31.2.tgz#d2ddf6cacbb95e4cc3796207510b660a25586324"
+  integrity sha512-TxZGrXzX2ggFH3BIKY5fmbeMdJuZrMIMDYPMX6R9255bueuYIuVaBQSLUeY2oD7W4IdeqRZiAVGCjDw2POKBRA==
 
 terser@^5.0.0:
   version "5.3.2"

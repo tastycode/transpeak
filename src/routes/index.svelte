@@ -1,6 +1,7 @@
 <script>
 import { onMount } from 'svelte'
 import _ from 'lodash'
+import Chart from 'svelte-frappe-charts'
 
 const defaultFreqThreshold = 150
 const defaultTimeThreshold = 500
@@ -16,6 +17,7 @@ const alarmLength = 600
 
 let trainingMode = "lower"
 let frequency = 0
+let rawFrequency = 0
 let ampThreshold = defaultAmpThreshold
 let freqThreshold = defaultFreqThreshold
 let timeThreshold = defaultTimeThreshold
@@ -26,8 +28,12 @@ let movingAmpAvg = 0
 let initialMovingAmpAvg = 0
 let loadedFromSavedState = false
 let ampHistory = []
+let freqHistory = []
 let frequencyData = null
 let isTriggered = false
+let chartData = {labels: [], datasets: [
+    {values: []}
+]}
 
 let tuner = null
 let frequencyBars = null
@@ -35,6 +41,7 @@ let frequencyBars = null
 onMount(() => {
   loadState()
   initTrainer()
+  updateChartData()
   window.addEventListener("unload", saveState);
   return saveState
 })
@@ -77,6 +84,7 @@ function initTrainer() {
   updateFrequencyBars()
 }
 function onFrequencyRaw(detectedFrequency) {
+    rawFrequency = detectedFrequency
   if (avgAmp == 0 || detectedFrequency == 0 || detectedFrequency > freqValidMax) {
     return
   }
@@ -145,6 +153,12 @@ const updateAmpHistory = _.throttle(function() {
   } else {
     ampHistory.push(avgAmp)
   }
+    if (freqHistory.length == ampHistoryBufferLength) {
+        freqHistory = [...freqHistory.slice(1), frequency]
+    } else {
+      freqHistory.push(frequency)
+    }
+  updateChartData()
 }, ampHistoryUpdateDelay, { leading: true})
 
 const updateFrequencyBars = _.throttle(function() {
@@ -177,8 +191,22 @@ const guessThreshold = (e) => {
 const reset = () => {
     freqThreshold = defaultFreqThreshold
     timeThreshold = defaultTimeThreshold
-    ampcThreshold = defaultAmpThreshold
+    ampThreshold = defaultAmpThreshold
 }
+
+const updateChartData = () => {
+    let nextData = {labels: [], 
+        colors: ['green', 'blue'],
+        datasets: [
+        {name: "frequency", values: []}
+    ]}
+    ampHistory.forEach( (item, index) => {
+        nextData.labels.push(index)
+        nextData.datasets[0].values.push(freqHistory[index])
+    })
+    chartData = nextData
+}
+
 
 $: isAmpOverThreshold = avgAmp > Math.max(movingAmpAvg, ampThreshold)
 </script>
@@ -195,6 +223,9 @@ $: isAmpOverThreshold = avgAmp > Math.max(movingAmpAvg, ampThreshold)
     flex-direction: row;
     align-items: center;
 
+}
+.frappe-chart .legend {
+    display: none;
 }
 .controlGroupLabel input[inputmode="numeric"] {
     margin-left: 2em;
@@ -227,6 +258,7 @@ $: isAmpOverThreshold = avgAmp > Math.max(movingAmpAvg, ampThreshold)
     </td>
   </tr>
 </table>
+<Chart data={chartData} type="line" axisOptions={{xAxisMode: 'tick', xIsSeries: 1}} lineOptions={{hideDots: 1}} />
 <form>
   <fieldset>
     <label for="mode">Training Mode</label>
